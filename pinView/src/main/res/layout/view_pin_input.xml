@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:padding="16dp">
+
+        <!-- PIN Circles -->
+        <LinearLayout
+            android:id="@+id/pinCircles"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginBottom="24dp" />
+
+        <!-- Keypad -->
+        <GridLayout
+            android:id="@+id/keypad"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:columnCount="3"
+            android:rowCount="4"
+            android:useDefaultMargins="true"
+            android:alignmentMode="alignMargins"
+            android:gravity="center"/>
+
+
+    </LinearLayout>
+
+</merge>
