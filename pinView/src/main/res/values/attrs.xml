@@ -23,5 +23,7 @@
         <attr name="doneButtonIconColor" format="color"/>
 
         <attr name="rippleColorForAll" format="color"/>
+        <attr name="clearButtonIcon" format="reference"/>
+        <attr name="doneButtonIcon" format="reference"/>
     </declare-styleable>
 </resources>
