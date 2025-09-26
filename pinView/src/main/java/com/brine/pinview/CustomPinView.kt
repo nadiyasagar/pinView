@@ -140,6 +140,7 @@ class CustomPinView @JvmOverloads constructor(
                 }
                 icon?.let { iconSize = buttonTextSizeSp.dpToPx() }
                 iconGravity = if (label == "clear" || label == "done") MaterialButton.ICON_GRAVITY_TEXT_START else MaterialButton.ICON_GRAVITY_TOP
+                iconPadding = 0
                 gravity = Gravity.CENTER
 
                 val lp = GridLayout.LayoutParams().apply {
