@@ -1,5 +1,6 @@
 package com.brine.pinview
 
+import android.R.attr.button
 import android.content.Context
 import android.content.res.ColorStateList
 import android.content.res.Resources
@@ -41,77 +42,49 @@ class CustomPinView @JvmOverloads constructor(
         "clear", "0", "done"
     )
 
-    // 🌈 Colors (defaults)
+    // Colors
     var circleFilledColor: Int = Color.BLACK
     var circleEmptyColor: Int = Color.TRANSPARENT
     var circleStrokeColor: Int = Color.BLACK
     var buttonBackgroundColor: Int = Color.BLACK
     var buttonTextColor: Int = Color.WHITE
     var buttonIconColor: Int = Color.WHITE
-
-    // ✅ Separate for action buttons
     var clearButtonBackgroundColor: Int = Color.RED
     var clearButtonIconColor: Int = Color.WHITE
     var doneButtonBackgroundColor: Int = Color.GREEN
     var doneButtonIconColor: Int = Color.WHITE
+    var rippleColorForAll: Int = Color.WHITE
 
-    // ⚡ New customizable sizes
-    var circleSizeDp: Int = 14       // default 20dp
-    var buttonTextSizeSp: Float = 14f // default 18sp
+    // Sizes
+    var circleSizeDp: Int = 14
+    var buttonTextSizeSp: Float = 14f
+    var circleKeypadSpacing: Int = 24.dpToPx()
+    var buttonSpacing: Int = 8.dpToPx()
+    var circleSpacing: Int = 8.dpToPx()
 
     init {
-        // ✅ Read custom attributes if provided in XML
         attrs?.let {
             context.withStyledAttributes(it, R.styleable.CustomPinView) {
-                circleFilledColor = getColor(
-                    R.styleable.CustomPinView_circleFilledColor,
-                    circleFilledColor
-                )
-                circleEmptyColor = getColor(
-                    R.styleable.CustomPinView_circleEmptyColor,
-                    circleEmptyColor
-                )
-                circleStrokeColor = getColor(
-                    R.styleable.CustomPinView_circleStrokeColor,
-                    circleStrokeColor
-                )
-                buttonBackgroundColor = getColor(
-                    R.styleable.CustomPinView_buttonBackgroundColor,
-                    buttonBackgroundColor
-                )
-                buttonTextColor = getColor(
-                    R.styleable.CustomPinView_buttonTextColor,
-                    buttonTextColor
-                )
-                buttonIconColor = getColor(
-                    R.styleable.CustomPinView_buttonIconColor,
-                    buttonIconColor
-                )
-                circleSizeDp = getDimensionPixelSize(
-                    R.styleable.CustomPinView_circleSize,
-                    circleSizeDp.dpToPx()
-                ).toInt()
-                buttonTextSizeSp = getDimension(
-                    R.styleable.CustomPinView_buttonTextSize,
-                    buttonTextSizeSp
-                )
-
-                clearButtonBackgroundColor = getColor(
-                    R.styleable.CustomPinView_clearButtonBackgroundColor, clearButtonBackgroundColor
-                )
-                clearButtonIconColor = getColor(
-                    R.styleable.CustomPinView_clearButtonIconColor, clearButtonIconColor
-                )
-                doneButtonBackgroundColor = getColor(
-                    R.styleable.CustomPinView_doneButtonBackgroundColor, doneButtonBackgroundColor
-                )
-                doneButtonIconColor = getColor(
-                    R.styleable.CustomPinView_doneButtonIconColor, doneButtonIconColor
-                )
-
+                rippleColorForAll = getColor(R.styleable.CustomPinView_rippleColorForAll, rippleColorForAll)
+                circleFilledColor = getColor(R.styleable.CustomPinView_circleFilledColor, circleFilledColor)
+                circleEmptyColor = getColor(R.styleable.CustomPinView_circleEmptyColor, circleEmptyColor)
+                circleStrokeColor = getColor(R.styleable.CustomPinView_circleStrokeColor, circleStrokeColor)
+                circleSpacing = getDimensionPixelSize(R.styleable.CustomPinView_circleSpacing, circleSpacing)
+                buttonBackgroundColor = getColor(R.styleable.CustomPinView_buttonBackgroundColor, buttonBackgroundColor)
+                buttonTextColor = getColor(R.styleable.CustomPinView_buttonTextColor, buttonTextColor)
+                buttonIconColor = getColor(R.styleable.CustomPinView_buttonIconColor, buttonIconColor)
+                circleSizeDp = getDimensionPixelSize(R.styleable.CustomPinView_circleSize, circleSizeDp.dpToPx()).toInt()
+                buttonTextSizeSp = getDimension(R.styleable.CustomPinView_buttonTextSize, buttonTextSizeSp)
+                clearButtonBackgroundColor = getColor(R.styleable.CustomPinView_clearButtonBackgroundColor, clearButtonBackgroundColor)
+                clearButtonIconColor = getColor(R.styleable.CustomPinView_clearButtonIconColor, clearButtonIconColor)
+                doneButtonBackgroundColor = getColor(R.styleable.CustomPinView_doneButtonBackgroundColor, doneButtonBackgroundColor)
+                doneButtonIconColor = getColor(R.styleable.CustomPinView_doneButtonIconColor, doneButtonIconColor)
+                circleKeypadSpacing = getDimensionPixelSize(R.styleable.CustomPinView_circleKeypadSpacing, circleKeypadSpacing)
+                buttonSpacing = getDimensionPixelSize(R.styleable.CustomPinView_buttonSpacing, buttonSpacing)
             }
         }
 
+        // Inflate layout
         inflate(context, R.layout.view_pin_input, this)
         setupCircles()
         setupKeypad()
@@ -125,8 +98,8 @@ class CustomPinView @JvmOverloads constructor(
             val circle = View(context).apply {
                 val size = circleSizeDp.dpToPx()
                 layoutParams = LinearLayout.LayoutParams(size, size).apply {
-                    marginStart = 12
-                    marginEnd = 12
+                    marginStart = circleSpacing / 2
+                    marginEnd = circleSpacing / 2
                 }
                 background = createCircleDrawable(false)
             }
@@ -135,21 +108,21 @@ class CustomPinView @JvmOverloads constructor(
         }
     }
 
-
     private fun setupKeypad() {
         val keypad = findViewById<GridLayout>(R.id.keypad)
+        (keypad.layoutParams as? MarginLayoutParams)?.topMargin = circleKeypadSpacing
         keypad.removeAllViews()
 
         numbers.forEach { label ->
             val button = MaterialButton(context).apply {
                 text = if (label == "clear" || label == "done") "" else label
-                textSize = buttonTextSizeSp // ⚡ Set text size dynamically
+                textSize = buttonTextSizeSp
                 icon = when (label) {
                     "clear" -> AppCompatResources.getDrawable(context, R.drawable.ic_close)
                     "done" -> AppCompatResources.getDrawable(context, R.drawable.ic_done)
                     else -> null
                 }
-                // ⚡ Apply colors
+                rippleColor = ColorStateList.valueOf(rippleColorForAll)
                 when (label) {
                     "clear" -> {
                         setBackgroundColor(clearButtonBackgroundColor)
@@ -165,36 +138,29 @@ class CustomPinView @JvmOverloads constructor(
                         iconTint = ColorStateList.valueOf(buttonIconColor)
                     }
                 }
-                icon?.let {
-                    iconSize = buttonTextSizeSp.dpToPx() // use dpToPx for pixels
-                }
-                // ✅ Adjust icon placement depending on type
-                iconGravity = if (label == "clear" || label == "done") {
-                    MaterialButton.ICON_GRAVITY_TEXT_START // keeps it centered if text is empty
-                } else {
-                    MaterialButton.ICON_GRAVITY_TOP
-                }
-
-                // ✅ Add padding balance
-                iconPadding = if (label == "clear" || label == "done") 0 else 8.dpToPx()
-
+                icon?.let { iconSize = buttonTextSizeSp.dpToPx() }
+                iconGravity = if (label == "clear" || label == "done") MaterialButton.ICON_GRAVITY_TEXT_START else MaterialButton.ICON_GRAVITY_TOP
                 gravity = Gravity.CENTER
 
-                layoutParams = GridLayout.LayoutParams().apply {
+                val lp = GridLayout.LayoutParams().apply {
                     width = 0
                     height = 0
                     columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f)
                     rowSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f)
-                    setMargins(8.dpToPx(), 8.dpToPx(), 8.dpToPx(), 8.dpToPx())
+                    setMargins(buttonSpacing, buttonSpacing, buttonSpacing, buttonSpacing)
                 }
+                layoutParams = lp
 
                 setOnClickListener { handleInput(label) }
             }
-            button.post {
-                val size = min(button.width, button.height)
-                button.layoutParams.width = size
-                button.layoutParams.height = size
-                button.requestLayout()
+
+            // ✅ Force square button when measured
+            button.addOnLayoutChangeListener { v, _, _, _, _, _, _, _, _ ->
+                val size = v.measuredWidth.coerceAtMost(v.measuredHeight)
+                if (size > 0) {
+                    v.layoutParams.width = size
+                    v.layoutParams.height = size
+                }
             }
 
             keypad.addView(button)
@@ -210,19 +176,13 @@ class CustomPinView @JvmOverloads constructor(
                 }
             }
             "done" -> {
-                if (pin.length == pinLength) {
-                    onPinComplete?.invoke(pin.toString())
-                }
+                if (pin.length == pinLength) onPinComplete?.invoke(pin.toString())
             }
             else -> {
                 if (pin.length < pinLength) {
                     pin.append(label)
                     updateCircles()
-
-                    // ✅ Call onPinComplete automatically when PIN is complete
-                    if (pin.length == pinLength) {
-                        onPinComplete?.invoke(pin.toString())
-                    }
+                    if (pin.length == pinLength) onPinComplete?.invoke(pin.toString())
                 }
             }
         }
@@ -246,9 +206,22 @@ class CustomPinView @JvmOverloads constructor(
         onPinComplete = listener
     }
 
-    fun Int.dpToPx(): Int =
-        (this * Resources.getSystem().displayMetrics.density).toInt()
-    fun Float.dpToPx(): Int =
-        (this * Resources.getSystem().displayMetrics.density).toInt()
+    // ✅ Override onMeasure to handle 0dp width/height
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        val widthMode = MeasureSpec.getMode(widthMeasureSpec)
+        val widthSize = MeasureSpec.getSize(widthMeasureSpec)
+        val heightMode = MeasureSpec.getMode(heightMeasureSpec)
+        val heightSize = MeasureSpec.getSize(heightMeasureSpec)
 
+        val width = if (widthSize == 0) 300.dpToPx() else widthSize
+        val height = if (heightSize == 0) 400.dpToPx() else heightSize
+
+        super.onMeasure(
+            MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY),
+            MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY)
+        )
+    }
+
+    fun Int.dpToPx(): Int = (this * Resources.getSystem().displayMetrics.density).toInt()
+    fun Float.dpToPx(): Int = (this * Resources.getSystem().displayMetrics.density).toInt()
 }

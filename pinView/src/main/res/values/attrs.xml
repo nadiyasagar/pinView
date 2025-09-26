@@ -1,19 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="CustomPinView">
-        <attr name="circleFilledColor" format="color" />
-        <attr name="circleEmptyColor" format="color" />
-        <attr name="circleStrokeColor" format="color" />
-        <attr name="buttonBackgroundColor" format="color" />
-        <attr name="buttonTextColor" format="color" />
-        <attr name="buttonIconColor" format="color" />
-        <attr name="circleSize" format="dimension" />
-        <attr name="buttonTextSize" format="dimension" />
+        <!-- Circles -->
+        <attr name="circleFilledColor" format="color"/>
+        <attr name="circleEmptyColor" format="color"/>
+        <attr name="circleStrokeColor" format="color"/>
+        <attr name="circleSize" format="dimension"/>
+        <attr name="circleSpacing" format="dimension"/>
 
+        <!-- Keypad -->
+        <attr name="circleKeypadSpacing" format="dimension"/>
+        <attr name="buttonSpacing" format="dimension"/>
+        <attr name="buttonTextSize" format="dimension"/>
+        <attr name="buttonBackgroundColor" format="color"/>
+        <attr name="buttonTextColor" format="color"/>
+        <attr name="buttonIconColor" format="color"/>
+
+        <!-- Action buttons -->
         <attr name="clearButtonBackgroundColor" format="color"/>
         <attr name="clearButtonIconColor" format="color"/>
         <attr name="doneButtonBackgroundColor" format="color"/>
         <attr name="doneButtonIconColor" format="color"/>
 
+        <attr name="rippleColorForAll" format="color"/>
     </declare-styleable>
 </resources>
