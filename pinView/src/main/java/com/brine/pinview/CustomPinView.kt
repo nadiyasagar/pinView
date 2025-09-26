@@ -180,10 +180,17 @@ class CustomPinView @JvmOverloads constructor(
                 }
             }
 
-            icon?.let { iconSize = buttonTextSizeSp.dpToPx() }
-            iconGravity = MaterialButton.ICON_GRAVITY_TEXT_START
+            // Force icon to not affect vertical centering
+            icon?.let {
+                iconSize = buttonTextSizeSp.dpToPx()
+                iconGravity = MaterialButton.ICON_GRAVITY_TEXT_START
+            }
             iconPadding = 0
+
+            // **Important fixes for vertical centering**
             gravity = Gravity.CENTER
+            includeFontPadding = false  // remove extra top/bottom padding
+            setPadding(0, 0, 0, 0)      // reset any default padding
 
             setOnClickListener { handleInput(label) }
 
@@ -197,6 +204,7 @@ class CustomPinView @JvmOverloads constructor(
                 }
             }
         }
+
 
     private fun gridLayoutParams(row: Int, col: Int): GridLayout.LayoutParams =
         GridLayout.LayoutParams().apply {
